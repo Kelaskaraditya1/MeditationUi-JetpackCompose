@@ -1,4 +1,4 @@
-package com.starkindustries.meditationui
+package com.starkindustries.meditationui.Frontend.Activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
