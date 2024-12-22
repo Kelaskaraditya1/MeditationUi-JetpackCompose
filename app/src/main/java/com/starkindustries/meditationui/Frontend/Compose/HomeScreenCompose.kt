@@ -51,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.starkindustries.meditationui.Data.BottomNavData
 import com.starkindustries.meditationui.Data.FeautuesData
 import com.starkindustries.meditationui.R
 import com.starkindustries.meditationui.Utility.Utility
@@ -171,8 +172,8 @@ fun CurrentMeditationCompose(){
 @Composable
 fun FeautureCard(title:String, logo:Int,background:Int){
     Box(modifier = Modifier
-        .size(200.dp).
-            padding(5.dp)
+        .size(150.dp)
+        .padding(5.dp)
         .clip(RoundedCornerShape(15.dp))
     ){
         Image(painter = painterResource(id = background), contentDescription = "",
@@ -239,8 +240,75 @@ fun PreviewFunction(){
         FeauturesCompose()
     }
 }
+
+@Composable
+fun BottomNavigationChip(title:String,
+                         imageId:Int,
+                         isSelected:Boolean,
+                         onClick:()->Unit){
+        Column (modifier = Modifier
+            .size(70.dp)){
+            Box(modifier = Modifier
+                .padding(top = 10.dp, start = 10.dp)
+                .clip(RoundedCornerShape(8.dp))){
+                Box(modifier =Modifier.background(
+                    if(isSelected)
+                        Blue20
+                    else
+                        Color.Transparent
+                ) ){
+                    Icon(painter = painterResource(id = imageId), contentDescription = "",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .size(40.dp)
+                            .padding(5.dp))
+                }
+            }
+            Text(text = title,
+                color = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp),
+                textAlign = TextAlign.Center,
+                fontWeight = if(isSelected)
+                    FontWeight.W300
+                else
+                    FontWeight.Thin,
+                fontSize = 13.sp)
+        }
+}
+
+@Composable
+fun BottomNavigationBar(bottomNavFeauturesList:List<BottomNavData>,
+                        initialIndex:Int=0){
+    var selectedIndex by rememberSaveable {
+        mutableStateOf(initialIndex)
+    }
+    val angledBlueGradient = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFF0033A0), // Dark Blue
+            Color(0xFF3378FF), // Medium Blue
+            Color(0xFF99C4FF)  // Light Blue
+        ),
+        start = Offset(0f, 0f), // Top-left cornerif(
+        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
+    )
+    val selectedState by rememberSaveable {
+        mutableStateOf(0)
+    }
+    Row(modifier = Modifier.background(Color.Gray)) {
+        bottomNavFeauturesList.forEachIndexed{
+            index,item->
+            BottomNavigationChip(title = item.title, imageId = item.icon, isSelected = index==selectedState,{selectedIndex=index})
+        }
+    }
+    }
+
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewFunctionMark2(){
-    FeautureCard(title = "Sleep Meditation", logo = R.drawable.headphone, background =R.drawable.red_background )
+    BottomNavigationBar(Utility.getBottomNavData())
 }
